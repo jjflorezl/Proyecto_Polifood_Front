@@ -28,14 +28,14 @@ export const cartService = {
       const cart = readCart();
       const existing = cart.items.find(item => item.productId === product.product_id);
 
-      if (existing) existing.quantity += quantity;
-      else cart.items.push({
-        id: crypto.randomUUID(),
-        productId: product.product_id,
-        product,
-        quantity,
-        unitPrice: product.product_price
-      });
+      cart.items = existing ? cart.items.map(item => item.productId === product.product_id ? { ...item, quantity: item.quantity + quantity } : item): [...cart.items,{
+          id: crypto.randomUUID(),
+          productId: product.product_id,
+          product,
+          quantity,
+          unitPrice: product.product_price
+        }
+      ];
 
       return saveCart(cart);
     }

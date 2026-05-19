@@ -8,6 +8,7 @@ import { LoginPage } from "../pages/LoginPage";
 import { OrdersPage } from "../pages/OrdersPage";
 import { RegisterPage } from "../pages/RegisterPage";
 import { VendorDashboardPage } from "../pages/VendorDashboardPage";
+import { OrderDetailPage } from "../pages/OrderDetailPage";
 
 function ProtectedLayout() {
   const { isAuthenticated } = useAuth();
@@ -37,6 +38,7 @@ export function AppRoutes() {
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout/:orderId" element={<CheckoutPage />} />
         <Route path="/orders" element={<OrdersPage />} />
+        <Route path="/orders/:orderId" element={<OrderDetailPage />} />
 
         <Route element={<RoleProtected allowedRoles={["Vendor", "Admin"]} />}>
           <Route path="/dashboard" element={<VendorDashboardPage />} />

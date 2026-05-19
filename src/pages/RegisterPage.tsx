@@ -9,11 +9,22 @@ export function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState<Role>("Student");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    await register({ email, password, role });
-    navigate("/");
+    setError("");
+    setLoading(true);
+    try {
+      await register({ email, password, role });
+      navigate("/");
+    } catch {
+      setError("No se pudo crear la cuenta. Intenta con otro correo.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -21,7 +32,7 @@ export function RegisterPage() {
       <form onSubmit={handleSubmit} className="w-full max-w-md rounded-3xl bg-white p-8 shadow-lg">
         <h1 className="text-3xl font-bold">Crear cuenta</h1>
         <p className="mt-2 text-slate-500">Por defecto tu backend usa el rol Student.</p>
-
+        {error && <p className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-600">{error}</p>}
         <label className="mt-6 block text-sm font-semibold">Correo</label>
         <input value={email} onChange={e => setEmail(e.target.value)} type="email" required className="mt-2 w-full rounded-xl border px-4 py-3 outline-none focus:ring-2 focus:ring-orange-500" />
 
@@ -35,7 +46,7 @@ export function RegisterPage() {
           <option value="Admin">Admin</option>
         </select>
 
-        <button className="mt-6 w-full rounded-xl bg-orange-600 px-4 py-3 font-bold text-white hover:bg-orange-700">Registrarme</button>
+        <button disabled={loading || !email || password.length < 8} className="mt-6 w-full rounded-xl bg-orange-600 px-4 py-3 font-bold text-white hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-orange-400 disabled:hover:bg-orange-400">{loading ? "Creando cuenta..." : "Registrarme"}</button>
         <p className="mt-5 text-center text-sm text-slate-500">
           ¿Ya tienes cuenta? <Link to="/login" className="font-semibold text-orange-600">Inicia sesión</Link>
         </p>

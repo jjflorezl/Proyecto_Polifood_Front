@@ -8,16 +8,20 @@ export function LoginPage() {
   const [email, setEmail] = useState("student@polifood.com");
   const [password, setPassword] = useState("12345678");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     setError("");
+    setLoading(true);
     try {
       await login({ email, password });
       navigate("/");
     } catch {
       setError("No se pudo iniciar sesión. Revisa tus credenciales.");
-    }
+    } finally {
+      setLoading(false);
+      }
   }
 
   return (
@@ -34,7 +38,7 @@ export function LoginPage() {
         <label className="mt-4 block text-sm font-semibold">Contraseña</label>
         <input value={password} onChange={e => setPassword(e.target.value)} type="password" className="mt-2 w-full rounded-xl border px-4 py-3 outline-none focus:ring-2 focus:ring-orange-500" />
 
-        <button className="mt-6 w-full rounded-xl bg-orange-600 px-4 py-3 font-bold text-white hover:bg-orange-700">Iniciar sesión</button>
+        <button disabled={loading || !email || !password} className="mt-6 w-full rounded-xl bg-orange-600 px-4 py-3 font-bold text-white hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-orange-400 disabled:hover:bg-orange-400">{loading ? "Ingresando..." : "Iniciar sesión"}</button>
 
         <p className="mt-5 text-center text-sm text-slate-500">
           ¿No tienes cuenta? <Link to="/register" className="font-semibold text-orange-600">Regístrate</Link>
